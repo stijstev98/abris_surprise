@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Surprise 💝</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caprasimo&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-overlay"></div>
+    
+    <div class="container">
+        <!-- Question Screens -->
+        <div class="question-screen active" id="question-1">
+            <h1 class="question-heading">Have you ever been called a 'Dinkle'?</h1>
+        </div>
+        
+        <div class="question-screen" id="question-2">
+            <h1 class="question-heading">Is your birthday around this time?</h1>
+        </div>
+        
+        <div class="question-screen" id="question-3">
+            <h1 class="question-heading">So you're the birthday girl huh?</h1>
+        </div>
+        
+        <div class="question-screen" id="question-4">
+            <h1 class="question-heading">You're a cute girl named Abri, aren't you?</h1>
+        </div>
+        
+        <div class="question-screen" id="question-5">
+            <h1 class="question-heading">Do you want a surprise?</h1>
+        </div>
+        
+        <!-- Buttons Container -->
+        <div class="buttons-container">
+            <button class="btn btn-yes" id="yes-btn">Yes</button>
+            <button class="btn btn-no" id="no-btn">No</button>
+        </div>
+        
+        <!-- Video Container -->
+        <div class="video-container" id="video-container">
+            <iframe id="video-player" 
+                    src="" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" 
+                    allowfullscreen
+                    style="display: block; width: 100%; height: 100%;">
+            </iframe>
+            <div class="surprise-overlay" id="surprise-overlay">
+                <img src="surprise.jpg" alt="Surprise!" class="surprise-image">
+            </div>
+        </div>
+        
+        <!-- Modal for "I don't believe you..." -->
+        <div class="modal" id="disbelief-modal">
+            <div class="modal-content">
+                <p>I don't believe you... 🤨</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
