@@ -186,72 +186,68 @@ body {
     transform: scale(1);
 }
 
-/* Video container */
-.video-container {
+/* Kindle background image - behind the video */
+.kindle-background {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    display: none;
-    z-index: 1000;
-    background: #000;
-}
-
-.video-container.active {
-    display: block;
-}
-
-.video-container iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1001;
-}
-
-/* Surprise overlay */
-.surprise-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    z-index: 999; /* Behind the video */
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #eae0c5;
     opacity: 0;
-    transition: opacity 10s ease-in-out;
-    z-index: 1002;
-    pointer-events: none;
+    visibility: hidden;
+    transition: opacity 5s ease-in-out, visibility 5s ease-in-out;
 }
 
-.surprise-overlay.show {
+.kindle-background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.kindle-background.fade-in {
     opacity: 1;
-    pointer-events: auto;
+    visibility: visible;
 }
 
-.surprise-image {
-    max-width: 90%;
-    max-height: 90%;
-    object-fit: contain;
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    animation: surpriseReveal 2s ease-out;
+/* Video iframe - controlled via JavaScript visibility */
+#video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000; /* Above the kindle background */
+    border: none;
+    transition: opacity 5s ease-in-out;
+    pointer-events: none; /* Initially disable clicks so overlay can capture them */
 }
 
-@keyframes surpriseReveal {
-    0% {
-        transform: scale(0.8) rotateY(10deg);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1) rotateY(0deg);
-        opacity: 1;
-    }
+#video-container.fade-out {
+    opacity: 0;
+}
+
+/* Video click overlay - transparent click area */
+.video-click-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1001; /* Above the video */
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    background: transparent;
+}
+
+.video-click-overlay.show {
+    opacity: 1;
+    visibility: visible;
 }
 
 /* Tablet styles */

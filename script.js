@@ -1,6 +1,7 @@
 // Application state
 let currentQuestion = 1;
 const totalQuestions = 5;
+let countdownStarted = false; // Track if countdown has been started
 
 // Video is now hardcoded in HTML - just show/hide the container
 // To change the video: update the src in the HTML iframe directly
@@ -10,15 +11,39 @@ const questionScreens = document.querySelectorAll('.question-screen');
 const yesButton = document.getElementById('yes-btn');
 const noButton = document.getElementById('no-btn');
 const disbeliefModal = document.getElementById('disbelief-modal');
-const videoContainer = document.getElementById('video-container');
-const videoPlayer = document.getElementById('video-player');
-const surpriseOverlay = document.getElementById('surprise-overlay');
+const videoIframe = document.getElementById('video-container'); // Now the iframe itself
+const kindleBackground = document.getElementById('kindle-background');
+const videoClickOverlay = document.getElementById('video-click-overlay');
 const buttonsContainer = document.querySelector('.buttons-container');
 
 // Initialize the application
 function init() {
     yesButton.addEventListener('click', handleYesClick);
     noButton.addEventListener('click', handleNoClick);
+    
+    // Hide video iframe initially via visibility
+    if (videoIframe) {
+        videoIframe.style.top = '0'; // Position correctly from start
+        videoIframe.style.visibility = 'hidden'; // But hide it
+        console.log('Video iframe positioned correctly but hidden via visibility');
+    } else {
+        console.error('Video iframe element not found during init');
+    }
+    
+    // Make sure kindle background is initially hidden
+    if (kindleBackground) {
+        console.log('Kindle background initialized and hidden');
+    } else {
+        console.error('Kindle background element not found during init');
+    }
+    
+    // Setup click handler for overlay
+    if (videoClickOverlay) {
+        videoClickOverlay.addEventListener('click', handleOverlayClick);
+        console.log('Click overlay initialized');
+    } else {
+        console.error('Video click overlay element not found during init');
+    }
     
     // Show first question with animation
     showQuestion(1);
@@ -39,6 +64,30 @@ function handleYesClick() {
 // Handle No button click
 function handleNoClick() {
     showDisbeliefModal();
+}
+
+// Handle overlay click to start countdown
+function handleOverlayClick() {
+    if (!countdownStarted) {
+        console.log('=== Overlay clicked! Starting video and countdown ===');
+        countdownStarted = true; // Prevent multiple countdowns
+        
+        // Hide the overlay immediately
+        videoClickOverlay.classList.remove('show');
+        videoClickOverlay.style.pointerEvents = 'none';
+        
+        // Enable pointer events on the iframe so user can interact with video
+        videoIframe.style.pointerEvents = 'auto';
+        
+        // Start the video by modifying the iframe src to include autoplay
+        const currentSrc = videoIframe.src;
+        const autoplaySrc = currentSrc + '&autoplay=1';
+        videoIframe.src = autoplaySrc;
+        console.log('Video autoplay enabled');
+        
+        // Start the countdown immediately
+        startFadeCountdown();
+    }
 }
 
 // Show a specific question with animation
@@ -74,38 +123,78 @@ function showDisbeliefModal() {
 
 // Show the surprise video
 function showSurpriseVideo() {
+    console.log('=== showSurpriseVideo called ===');
+    
+    if (!videoIframe) {
+        console.error('Video iframe element not found!');
+        return;
+    }
+    
+    if (!kindleBackground) {
+        console.error('Kindle background element not found!');
+        return;
+    }
+    
+    if (!videoClickOverlay) {
+        console.error('Video click overlay element not found!');
+        return;
+    }
+    
     // Hide questions and buttons
     document.querySelector('.container').style.display = 'none';
+    console.log('Container hidden');
     
-    // Show video container - iframe is already loaded with hardcoded src
-    videoContainer.classList.add('active');
+    // Show video iframe by making it visible
+    console.log('Video visibility before:', videoIframe.style.visibility);
+    videoIframe.style.visibility = 'visible';
+    console.log('Video iframe made visible!');
     
-    console.log('Video container shown - hardcoded iframe should now be visible');
+    // Show the click overlay after a short delay to ensure video is loaded
+    setTimeout(() => {
+        videoClickOverlay.classList.add('show');
+        console.log('Click overlay shown - waiting for user to click to start countdown');
+    }, 500);
     
-    // Start the surprise reveal countdown
-    startSurpriseCountdown();
+    // Confirm the change
+    setTimeout(() => {
+        console.log('Video visibility after:', window.getComputedStyle(videoIframe).visibility);
+        console.log('Video should now be playing... Click anywhere to start the countdown!');
+    }, 100);
 }
 
-// Start countdown for surprise reveal (Rick Roll video is about 3.5 minutes - adjust as needed)
-function startSurpriseCountdown() {
-    // Adjust this timing based on your actual video length
-    // Rick Roll video is about 3.5 minutes, start fading at 3:20
-    const videoLength = 210000; // 3.5 minutes in milliseconds
-    const fadeStartTime = videoLength - 10000; // Start fade 10 seconds before end
+// Start countdown for fade transition at 1 minute mark
+function startFadeCountdown() {
+    console.log('=== Starting 1-minute countdown for fade transition ===');
     
+    // Set timer for 1 minute (60 seconds = 60000 milliseconds)
     setTimeout(() => {
-        revealSurprise();
-    }, fadeStartTime);
+        startFadeTransition();
+    }, 53000);
 }
 
-// Reveal the surprise image with fade
-function revealSurprise() {
-    surpriseOverlay.classList.add('show');
+
+// Start the fade transition: fade out video, fade in kindle background
+function startFadeTransition() {
+    console.log('=== Starting fade transition ===');
     
-    // Optional: Add some celebration effects
+    if (!videoIframe || !kindleBackground) {
+        console.error('Video iframe or kindle background element not found!');
+        return;
+    }
+    
+    // Start fading out the video (5 second transition)
+    console.log('Fading out video...');
+    videoIframe.classList.add('fade-out');
+    
+    // Simultaneously start fading in the kindle background (5 second transition)  
+    console.log('Fading in kindle background...');
+    kindleBackground.classList.add('fade-in');
+    
+    // Optional: Add celebration effects after the fade completes
     setTimeout(() => {
+        console.log('Fade transition completed!');
         addCelebrationEffects();
-    }, 5000);
+    }, 5500); // Wait a bit after the 5-second fade completes
 }
 
 // Add some fun celebration effects
@@ -206,7 +295,8 @@ document.addEventListener('DOMContentLoaded', addTouchSupport);
 
 // Add keyboard support for accessibility
 document.addEventListener('keydown', (e) => {
-    if (videoContainer.classList.contains('active')) return;
+    // Don't handle keys if video is visible
+    if (videoIframe && videoIframe.style.visibility === 'visible') return;
     
     if (e.key === 'ArrowLeft' || e.key === 'y' || e.key === 'Y') {
         handleYesClick();

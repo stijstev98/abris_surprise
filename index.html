@@ -40,19 +40,6 @@
             <button class="btn btn-no" id="no-btn">No</button>
         </div>
         
-        <!-- Video Container -->
-        <div class="video-container" id="video-container">
-            <iframe id="video-player" 
-                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=1&rel=0" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-            </iframe>
-            <div class="surprise-overlay" id="surprise-overlay">
-                <img src="surprise.jpg" alt="Surprise!" class="surprise-image">
-            </div>
-        </div>
-        
         <!-- Modal for "I don't believe you..." -->
         <div class="modal" id="disbelief-modal">
             <div class="modal-content">
@@ -60,6 +47,17 @@
             </div>
         </div>
     </div>
+
+    <!-- Kindle Background Image - Behind the video -->
+    <div id="kindle-background" class="kindle-background">
+        <img src="./assets/Kindle_Background.jpg" alt="Kindle Background" />
+    </div>
+
+    <!-- Video Container - Outside of main container so it won't be hidden -->
+    <iframe id="video-container" src="https://www.youtube.com/embed/dKKdx4rUAxk?si=MZE7oOwkCdix-3-e" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    
+    <!-- Overlay to capture video clicks -->
+    <div id="video-click-overlay" class="video-click-overlay"></div>
 
     <script src="script.js"></script>
 </body>
