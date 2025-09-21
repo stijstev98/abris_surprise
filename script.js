@@ -2,9 +2,8 @@
 let currentQuestion = 1;
 const totalQuestions = 5;
 
-// YouTube video URL - using a test video that allows embedding
-// Replace with your chosen video URL
-const YOUTUBE_VIDEO_URL = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=1&rel=0";
+// Video is now hardcoded in HTML - just show/hide the container
+// To change the video: update the src in the HTML iframe directly
 
 // DOM elements
 const questionScreens = document.querySelectorAll('.question-screen');
@@ -78,89 +77,20 @@ function showSurpriseVideo() {
     // Hide questions and buttons
     document.querySelector('.container').style.display = 'none';
     
-    // Show video container first
+    // Show video container - iframe is already loaded with hardcoded src
     videoContainer.classList.add('active');
-    videoContainer.style.display = 'block';
     
-    // Add a test div to confirm container is working
-    const testDiv = document.createElement('div');
-    testDiv.style.cssText = `
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        background: red;
-        color: white;
-        padding: 10px;
-        z-index: 2000;
-        font-size: 16px;
-    `;
-    testDiv.textContent = 'Video container is active - iframe should be visible below this';
-    videoContainer.appendChild(testDiv);
-    
-    // Remove test div after 3 seconds
-    setTimeout(() => {
-        testDiv.remove();
-    }, 3000);
-    
-    // Ensure iframe is visible and properly sized
-    videoPlayer.style.display = 'block';
-    videoPlayer.style.width = '100%';
-    videoPlayer.style.height = '100%';
-    videoPlayer.style.position = 'absolute';
-    videoPlayer.style.top = '0';
-    videoPlayer.style.left = '0';
-    videoPlayer.style.background = '#000';
-    videoPlayer.style.zIndex = '1001';
-    
-    // Set video source after container is visible
-    setTimeout(() => {
-        videoPlayer.src = YOUTUBE_VIDEO_URL;
-        console.log('Video URL set:', YOUTUBE_VIDEO_URL);
-        console.log('Video container displayed:', window.getComputedStyle(videoContainer).display);
-        console.log('Video iframe displayed:', window.getComputedStyle(videoPlayer).display);
-        
-        // Show fallback initially
-        const fallbackContent = document.getElementById('fallback-content');
-        fallbackContent.style.display = 'block';
-        
-        // Add error handling for iframe loading
-        videoPlayer.onload = () => {
-            console.log('Video iframe loaded successfully');
-            fallbackContent.style.display = 'none';
-        };
-        
-        videoPlayer.onerror = () => {
-            console.error('Video iframe failed to load');
-            fallbackContent.innerHTML = '<h2>Video failed to load</h2><p>There was an error loading the video content.</p>';
-        };
-        
-        // Hide fallback after 5 seconds if iframe loads
-        setTimeout(() => {
-            fallbackContent.style.display = 'none';
-        }, 5000);
-        
-        // Double-check visibility after a moment
-        setTimeout(() => {
-            const rect = videoPlayer.getBoundingClientRect();
-            console.log('Video iframe position:', rect);
-            console.log('Video iframe computed styles:', {
-                display: window.getComputedStyle(videoPlayer).display,
-                visibility: window.getComputedStyle(videoPlayer).visibility,
-                opacity: window.getComputedStyle(videoPlayer).opacity,
-                zIndex: window.getComputedStyle(videoPlayer).zIndex
-            });
-        }, 1000);
-    }, 100);
+    console.log('Video container shown - hardcoded iframe should now be visible');
     
     // Start the surprise reveal countdown
     startSurpriseCountdown();
 }
 
-// Start countdown for surprise reveal (placeholder video is about 3 minutes - adjust as needed)
+// Start countdown for surprise reveal (Rick Roll video is about 3.5 minutes - adjust as needed)
 function startSurpriseCountdown() {
     // Adjust this timing based on your actual video length
-    // Placeholder video is about 3 minutes, start fading at 2:50
-    const videoLength = 180000; // 3 minutes in milliseconds
+    // Rick Roll video is about 3.5 minutes, start fading at 3:20
+    const videoLength = 210000; // 3.5 minutes in milliseconds
     const fadeStartTime = videoLength - 10000; // Start fade 10 seconds before end
     
     setTimeout(() => {

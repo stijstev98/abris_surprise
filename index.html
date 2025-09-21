@@ -43,17 +43,11 @@
         <!-- Video Container -->
         <div class="video-container" id="video-container">
             <iframe id="video-player" 
-                    src="" 
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=1&rel=0" 
                     frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" 
-                    allowfullscreen
-                    style="display: block; width: 100%; height: 100%;">
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
             </iframe>
-            <!-- Fallback for debugging -->
-            <div id="fallback-content" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; text-align: center; z-index: 2000;">
-                <h2>Loading video...</h2>
-                <p>If this message persists, there might be an issue with video loading.</p>
-            </div>
             <div class="surprise-overlay" id="surprise-overlay">
                 <img src="surprise.jpg" alt="Surprise!" class="surprise-image">
             </div>
