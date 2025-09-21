@@ -2,9 +2,16 @@
 let currentQuestion = 1;
 const totalQuestions = 5;
 let countdownStarted = false; // Track if countdown has been started
+let mobileFirstTapDone = false; // Track if mobile first tap is done
 
 // Video is now hardcoded in HTML - just show/hide the container
 // To change the video: update the src in the HTML iframe directly
+
+// Utility function to detect mobile devices
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+           (navigator.maxTouchPoints && navigator.maxTouchPoints > 2 && /MacIntel/.test(navigator.platform));
+}
 
 // DOM elements
 const questionScreens = document.querySelectorAll('.question-screen');
@@ -69,19 +76,64 @@ function handleNoClick() {
 // Handle overlay click to start countdown
 function handleOverlayClick() {
     if (!countdownStarted) {
-        console.log('=== Overlay clicked! Starting video and countdown ===');
+        const isMobile = isMobileDevice();
+        
+        // On mobile devices, handle the two-tap requirement
+        if (isMobile && !mobileFirstTapDone) {
+            console.log('=== Mobile first tap - activating video ===');
+            mobileFirstTapDone = true;
+            
+            // Enable pointer events on the iframe for the first tap
+            videoIframe.style.pointerEvents = 'auto';
+            
+            // Briefly focus the iframe to activate it
+            videoIframe.focus();
+            
+            // Change overlay to indicate second tap needed
+            videoClickOverlay.style.background = 'rgba(0, 0, 0, 0.1)';
+            videoClickOverlay.style.cursor = 'pointer';
+            
+            // Add a subtle visual indicator
+            const tapIndicator = document.createElement('div');
+            tapIndicator.innerHTML = '🎬 Tap again to start';
+            tapIndicator.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: white;
+                font-size: 1.2rem;
+                background: rgba(0, 0, 0, 0.7);
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                z-index: 1002;
+                pointer-events: none;
+                animation: fadeInOut 2s ease-in-out;
+            `;
+            
+            document.body.appendChild(tapIndicator);
+            
+            // Remove indicator after animation
+            setTimeout(() => {
+                if (tapIndicator.parentNode) {
+                    tapIndicator.remove();
+                }
+            }, 2000);
+            
+            console.log('Mobile device - waiting for second tap...');
+            return;
+        }
+        
+        console.log('=== Starting video and countdown ===');
         countdownStarted = true; // Prevent multiple countdowns
         
         // Hide the overlay immediately
         videoClickOverlay.classList.remove('show');
         videoClickOverlay.style.pointerEvents = 'none';
         
-        // Enable pointer events on the iframe so user can interact with video
-        videoIframe.style.pointerEvents = 'auto';
-        
         // Start the video by modifying the iframe src to include autoplay
         const currentSrc = videoIframe.src;
-        const autoplaySrc = currentSrc + '&autoplay=1';
+        const autoplaySrc = currentSrc.includes('?') ? currentSrc + '&autoplay=1' : currentSrc + '?autoplay=1';
         videoIframe.src = autoplaySrc;
         console.log('Video autoplay enabled');
         
